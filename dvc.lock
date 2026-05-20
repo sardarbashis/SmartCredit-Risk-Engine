@@ -1,0 +1,152 @@
+schema: '2.0'
+stages:
+  preprocess_data:
+    cmd: python credit_score_mlops/data_preprocessing.py
+    deps:
+    - path: credit_score_mlops/data_preprocessing.py
+      hash: md5
+      md5: 6b426f5623641bee3207686868d70f28
+      size: 1417
+    - path: data/raw/credit_risk_dataset.csv
+      hash: md5
+      md5: 9a01768113784fa109745fd8fe031eee
+      size: 1804682
+    - path: params.yaml
+      hash: md5
+      md5: 119ddcc481205d172570153d4fa66c67
+      size: 1175
+    params:
+      params.yaml:
+        data_preprocessing.raw_data_file: data/raw/credit_risk_dataset.csv
+        data_preprocessing.test_size: 0.3
+        random_state: 42
+        target: loan_status
+        test_file: data/processed/test.csv
+        train_file: data/processed/train.csv
+    outs:
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 8eeea2e6dff55f6ef2a8e5360c17dc15
+      size: 531749
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 605eccc3d25fe76586dec96b21a561ed
+      size: 1240548
+  train:
+    cmd: python credit_score_mlops/modeling/train.py
+    deps:
+    - path: credit_score_mlops/modeling/train.py
+      hash: md5
+      md5: 8c05c2e56ddccc99c83d75d6a5c5546a
+      size: 4202
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 8eeea2e6dff55f6ef2a8e5360c17dc15
+      size: 531749
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 605eccc3d25fe76586dec96b21a561ed
+      size: 1240548
+    - path: params.yaml
+      hash: md5
+      md5: 119ddcc481205d172570153d4fa66c67
+      size: 1175
+    params:
+      params.yaml:
+        mlflow.experiment_name: weight-of-evidence-logistic-regression-exp
+        mlflow.model_name: woelr
+        mlflow.remote_uri: https://dagshub.com/marcellinus-witarsah/credit-score-mlops.mlflow
+        model_file: models/woelr.pkl
+        target: loan_status
+        test_calibration_curve_file: reports/figures/test_calibration_curve.png
+        test_file: data/processed/test.csv
+        test_metrics_file: reports/test_metrics.json
+        train.logistic_regression:
+          random_state: 42
+        train.weight_of_evidence_transformer:
+          numerical_columns:
+          - person_age
+          - person_income
+          - person_emp_length
+          - loan_amnt
+          - loan_int_rate
+          - loan_percent_income
+          - cb_person_cred_hist_length
+          categorical_columns:
+          - person_home_ownership
+          - loan_intent
+          - loan_grade
+          - cb_person_default_on_file
+          bins: 8
+        train_calibration_curve_file: reports/figures/train_calibration_curve.png
+        train_file: data/processed/train.csv
+        train_metrics_file: reports/train_metrics.json
+    outs:
+    - path: models/woelr.pkl
+      hash: md5
+      md5: bc703807001cb96277706bb73ac4ef66
+      size: 8736
+    - path: reports/figures/test_calibration_curve.png
+      hash: md5
+      md5: f04f61a9e8d674de84676aad3b4696a0
+      size: 51723
+    - path: reports/figures/train_calibration_curve.png
+      hash: md5
+      md5: ddfc5a53ec5378311656f5a0fca14224
+      size: 52033
+    - path: reports/test_metrics.json
+      hash: md5
+      md5: 459a8765b739ab426318bdc3851659ba
+      size: 173
+    - path: reports/train_metrics.json
+      hash: md5
+      md5: b2235fbfafea7f66e6900ede7c4e2c45
+      size: 173
+  evaluate:
+    cmd: python credit_score_mlops/modeling/evaluate.py models/model.pkl data/processed/train.csv
+      data/processed/test.csv
+    deps:
+    - path: credit_score_mlops/modeling/evaluate.py
+      hash: md5
+      md5: 19cd3663372b74fa4c069ad054051b6e
+      size: 2070
+    - path: data/processed/test.csv
+      hash: md5
+      md5: 8eeea2e6dff55f6ef2a8e5360c17dc15
+      size: 531749
+    - path: data/processed/train.csv
+      hash: md5
+      md5: 605eccc3d25fe76586dec96b21a561ed
+      size: 1240548
+    - path: models/model.pkl
+      hash: md5
+      md5: ef8b2c01dbe246a1e64d027cc3838673
+      size: 6607
+    - path: params.yaml
+      hash: md5
+      md5: a9c3dfa75b25b8932063ba4a811a428a
+      size: 709
+    params:
+      params.yaml:
+        evaluate.test_calibration_curve_file: reports/figures/test_calibration_curve.png
+        evaluate.test_metrics_file: reports/test_metrics.json
+        evaluate.train_calibration_curve_file: reports/figures/train_calibration_curve.png
+        evaluate.train_metrics_file: reports/train_metrics.json
+        target: loan_status
+    outs:
+    - path: reports/figures/test_calibration_curve.png
+      hash: md5
+      md5: 3031545fd7b6c5417fa24dc08ae852cd
+      size: 50374
+    - path: reports/figures/train_calibration_curve.png
+      hash: md5
+      md5: edbeae05ac2a31534c229868fd69ee56
+      size: 50733
+    - path: reports/test_metrics.json
+      hash: md5
+      md5: ef72fda2cc50f15a7afa0237833dc8ae
+      size: 173
+    - path: reports/train_metrics.json
+      hash: md5
+      md5: 08198cc22816feaa80bfbef4d1ffee10
+      size: 173
