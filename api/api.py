@@ -10,12 +10,12 @@ from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from credit_score_mlops.config import (
+from risk_engine.config import (
     CREDIT_SCORE_SCALING_PARAMS,
     GLOBAL_API,
     MLFLOW_PARAMS,
 )
-from credit_score_mlops.credit_score import CreditScoreScaling
+from risk_engine.credit_score import CreditScoreScaling
 
 load_dotenv(find_dotenv())
 
@@ -51,12 +51,13 @@ def prepare_credit_scorer():
     # 2. Access remote MLFlow Server on DagsHub
     mlflow.set_tracking_uri(remote_uri)  # set dagshub as the remote URI
 
-    os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv(
-        "DAGSHUB_USER_NAME"
-    )  # set up credentials for accessing remote dagshub uri
-    os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv(
-        "DAGSHUB_PASSWORD"
-    )  # set up credentials for accessing remote dagshub uri
+   if os.getenv("DAGSHUB_USER_NAME"):
+       os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("DAGSHUB_USER_NAME")
+
+   if os.getenv("DAGSHUB_PASSWORD"):
+       os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("DAGSHUB_PASSWORD")
+
+    # set up credentials for accessing remote dagshub uri
 
     # 3. Get Model for Remote URI
     loaded_model = mlflow.sklearn.load_model(logged_model)
