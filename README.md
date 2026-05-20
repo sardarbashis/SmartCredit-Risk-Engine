@@ -52,7 +52,7 @@ SmartCredit-Risk-Engine/
 │
 ├── api/                  # FastAPI backend
 ├── app/                  # Streamlit frontend
-├── credit_score_mlops/   # ML pipeline and utilities
+├── risk_engine/          # ML pipeline and utilities
 ├── data/                 # Dataset folders
 ├── models/               # Saved trained models
 ├── notebooks/            # Experiments and analysis
