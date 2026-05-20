@@ -10,8 +10,8 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 
-from credit_score_mlops.utils import logger
-from credit_score_mlops.woe_transformer import WOETransformer
+from risk_engine.utils import logger
+from risk_engine.woe_transformer import WOETransformer
 
 
 class CreditScoreScaling:

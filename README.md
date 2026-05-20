@@ -1,40 +1,63 @@
 # SmartCredit Risk Engine
 
-A beginner-friendly Machine Learning + MLOps project for predicting credit risk using a trained ML model, FastAPI API service, and Streamlit web app.
+A machine learning project for predicting customer credit risk using Logistic Regression, FastAPI, and Streamlit.
 
-## Project Goal
+This project focuses on understanding how ML models can be deployed as APIs and used in finance-related applications.
 
-The goal of this project is to understand how a machine learning model can move from notebook experimentation to a simple deployable application.
+---
 
-This project focuses on:
+## Project Overview
 
-- Credit risk prediction
-- ML model training
-- API-based model serving
-- Web app interaction
-- Basic Docker setup
+The goal of this project is to build a simple end-to-end machine learning workflow for credit risk prediction.
+
+The project covers:
+
+- Data preprocessing
+- Model training
+- Risk prediction
+- API deployment using FastAPI
+- Simple frontend interface using Streamlit
+- Basic Docker containerization
+
+The application predicts whether a customer belongs to a low-risk or high-risk credit category based on financial input data.
+
+---
 
 ## Tech Stack
 
+### Machine Learning
 - Python
 - Pandas
+- NumPy
 - Scikit-learn
+
+### Backend & Deployment
 - FastAPI
-- Streamlit
+- Uvicorn
 - Docker
+
+### Frontend
+- Streamlit
+
+### Development Tools
+- Git
 - GitHub Actions
+
+---
 
 ## Project Structure
 
 ```txt
 SmartCredit-Risk-Engine/
-├── api/
-├── app/
-├── credit_score_mlops/
-├── data/
-├── models/
-├── notebooks/
-├── reports/
+│
+├── api/                  # FastAPI backend
+├── app/                  # Streamlit frontend
+├── credit_score_mlops/   # ML pipeline and utilities
+├── data/                 # Dataset folders
+├── models/               # Saved trained models
+├── notebooks/            # Experiments and analysis
+├── reports/              # Metrics and outputs
+│
 ├── Dockerfile
 ├── requirements.txt
 └── README.md
