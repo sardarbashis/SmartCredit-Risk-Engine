@@ -4,18 +4,19 @@ a module for data preprocessing.
 
 import os
 
+import mlflow
 import mlflow.sklearn
 import pandas as pd
 from dotenv import find_dotenv, load_dotenv
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from risk_engine.config import (
+from credit_score_mlops.config import (
     CREDIT_SCORE_SCALING_PARAMS,
     GLOBAL_API,
     MLFLOW_PARAMS,
 )
-from risk_engine.credit_score import CreditScoreScaling
+from credit_score_mlops.credit_score import CreditScoreScaling
 
 load_dotenv(find_dotenv())
 
@@ -48,24 +49,31 @@ def prepare_credit_scorer():
     odds = CREDIT_SCORE_SCALING_PARAMS.odds
     scorecard_points = CREDIT_SCORE_SCALING_PARAMS.scorecard_points
 
-    # 2. Access remote MLFlow Server on DagsHub
-    mlflow.set_tracking_uri(remote_uri)  # set dagshub as the remote URI
+    # Access remote MLflow Server on DagsHub
+    mlflow.set_tracking_uri(remote_uri)
 
-   if os.getenv("DAGSHUB_USER_NAME"):
-       os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("DAGSHUB_USER_NAME")
+    # Optional credentials
+    if os.getenv("DAGSHUB_USER_NAME"):
+        os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv(
+            "DAGSHUB_USER_NAME"
+        )
 
-   if os.getenv("DAGSHUB_PASSWORD"):
-       os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("DAGSHUB_PASSWORD")
+    if os.getenv("DAGSHUB_PASSWORD"):
+        os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv(
+            "DAGSHUB_PASSWORD"
+        )
 
-    # set up credentials for accessing remote dagshub uri
-
-    # 3. Get Model for Remote URI
+    # Load model
     loaded_model = mlflow.sklearn.load_model(logged_model)
 
-    # 4. Integrate with the CreditScoreScaling class
+    # Create scorer
     credit_scorer = CreditScoreScaling(
-        pipeline=loaded_model.pipeline, pdo=pdo, odds=odds, scorecard_points=scorecard_points
+        pipeline=loaded_model.pipeline,
+        pdo=pdo,
+        odds=odds,
+        scorecard_points=scorecard_points,
     )
+
     return credit_scorer
 
 
@@ -74,30 +82,21 @@ credit_scorer = prepare_credit_scorer()
 
 @app.get("/")
 async def info() -> dict:
-    """Calculate credit score based on the loan applicant data.
-
-    Args:
-        loan_applicant_data (LoanApplicantData): Load applicant data.
-
-    Returns:
-        CreditScore: Credits score results returned in dictionary format.
-    """
     return {"message": "Welcome to Credit Score API!"}
 
 
 @app.post("/calculate-credit-score")
-async def calculate_credit_score(loan_applicant_data: LoanApplicantData) -> CreditScore:
-    """Calculate credit score based on the loan applicant data.
+async def calculate_credit_score(
+    loan_applicant_data: LoanApplicantData,
+) -> CreditScore:
 
-    Args:
-        loan_applicant_data (LoanApplicantData): Load applicant data.
-
-    Returns:
-        CreditScore: Credits score results returned in dictionary format.
-    """
     input_df = pd.DataFrame(
         [loan_applicant_data.model_dump().values()],
         columns=loan_applicant_data.model_dump().keys(),
     )
-    credit_score = credit_scorer.calculate_credit_score(input_df)["credit_score"][0]
+
+    credit_score = credit_scorer.calculate_credit_score(
+        input_df
+    )["credit_score"][0]
+
     return {"credit_score": round(credit_score)}
