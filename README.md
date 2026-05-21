@@ -1,63 +1,224 @@
 # SmartCredit Risk Engine
 
-A machine learning project for predicting customer credit risk using Logistic Regression, FastAPI, and Streamlit.
+An end-to-end ML-powered credit risk prediction system built using FastAPI, Scikit-learn, and MLOps principles.
 
-This project focuses on understanding how ML models can be deployed as APIs and used in finance-related applications.
+This project predicts customer credit scores using machine learning models and exposes predictions through a production-style REST API with interactive Swagger documentation.
 
 ---
 
-## Project Overview
+## Features
 
-The goal of this project is to build a simple end-to-end machine learning workflow for credit risk prediction.
+- Credit score prediction using Machine Learning
+- FastAPI-powered REST API
+- Interactive Swagger API documentation
+- Real-time inference pipeline
+- JSON request/response support
+- Docker-ready architecture
+- Modular MLOps project structure
+- Scorecard generation system
 
-The project covers:
+---
 
-- Data preprocessing
-- Model training
-- Risk prediction
-- API deployment using FastAPI
-- Simple frontend interface using Streamlit
-- Basic Docker containerization
+## Demo Video
 
-The application predicts whether a customer belongs to a low-risk or high-risk credit category based on financial input data.
+[Watch Project Demo](PASTE_YOUR_VIDEO_LINK_HERE)
+
+---
+
+## API Demo Screenshots
+
+### Swagger UI
+
+![Swagger UI](images/swagger-home.jpeg)
+
+---
+
+### Request Body Example
+
+![Request Body](images/request-body.jpeg)
+
+---
+
+### Prediction Result
+
+![Prediction Result](images/prediction-result.jpeg)
 
 ---
 
 ## Tech Stack
 
-### Machine Learning
 - Python
+- FastAPI
+- Scikit-learn
 - Pandas
 - NumPy
-- Scikit-learn
-
-### Backend & Deployment
-- FastAPI
 - Uvicorn
 - Docker
-
-### Frontend
-- Streamlit
-
-### Development Tools
-- Git
-- GitHub Actions
 
 ---
 
 ## Project Structure
 
-```txt
+```bash
 SmartCredit-Risk-Engine/
 │
-├── api/                  # FastAPI backend
-├── app/                  # Streamlit frontend
-├── risk_engine/          # ML pipeline and utilities
-├── data/                 # Dataset folders
-├── models/               # Saved trained models
-├── notebooks/            # Experiments and analysis
-├── reports/              # Metrics and outputs
-│
+├── api/
+├── app/
+├── credit_score_mlops/
+├── data/
+├── models/
+├── notebooks/
+├── reports/
+├── images/
 ├── Dockerfile
-├── requirements.txt
+├── params.yaml
+├── pyproject.toml
 └── README.md
+```
+
+---
+
+## API Endpoint
+
+### Calculate Credit Score
+
+```http
+POST /calculate-credit-score
+```
+
+---
+
+## Sample API Request
+
+```json
+{
+  "person_age": 28,
+  "person_income": 65000,
+  "person_home_ownership": "RENT",
+  "person_emp_length": 5,
+  "loan_intent": "EDUCATION",
+  "loan_grade": "B",
+  "loan_amnt": 12000,
+  "loan_int_rate": 11.5,
+  "loan_percent_income": 0.18,
+  "cb_person_default_on_file": "N",
+  "cb_person_cred_hist_length": 6
+}
+```
+
+---
+
+## Sample API Response
+
+```json
+{
+  "credit_score": 567
+}
+```
+
+---
+
+## cURL Example
+
+```bash
+curl -X POST "http://127.0.0.1:8000/calculate-credit-score" \
+-H "accept: application/json" \
+-H "Content-Type: application/json" \
+-d '{
+  "person_age": 28,
+  "person_income": 65000,
+  "person_home_ownership": "RENT",
+  "person_emp_length": 5,
+  "loan_intent": "EDUCATION",
+  "loan_grade": "B",
+  "loan_amnt": 12000,
+  "loan_int_rate": 11.5,
+  "loan_percent_income": 0.18,
+  "cb_person_default_on_file": "N",
+  "cb_person_cred_hist_length": 6
+}'
+```
+
+---
+
+## System Architecture
+
+User / Client  
+↓  
+FastAPI Backend  
+↓  
+Input Validation  
+↓  
+ML Pipeline  
+↓  
+Credit Score Prediction  
+↓  
+JSON API Response
+
+---
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/sardarbashis/SmartCredit-Risk-Engine.git
+```
+
+Move into the project directory:
+
+```bash
+cd SmartCredit-Risk-Engine
+```
+
+Create virtual environment:
+
+```bash
+python -m venv venv
+```
+
+Activate virtual environment:
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Run FastAPI server:
+
+```bash
+python -m uvicorn api.api:app --reload
+```
+
+Open Swagger documentation:
+
+```bash
+http://127.0.0.1:8000/docs
+```
+
+---
+
+## Future Improvements
+
+- SHAP explainability integration
+- Deployment on Render/Railway
+- Streamlit dashboard redesign
+- Batch CSV predictions
+- Authentication system
+- Monitoring & logging dashboard
+
+---
+
+## Author
+
+Ashis Kumar Sardar
+
+GitHub:
+https://github.com/sardarbashis
