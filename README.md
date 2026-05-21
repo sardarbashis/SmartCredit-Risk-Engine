@@ -1,18 +1,47 @@
 # SmartCredit Risk Engine
 
-ML-powered credit risk prediction API and dashboard built using FastAPI, Scikit-learn, and MLOps principles.
+An end-to-end ML-powered credit risk prediction system built using FastAPI, Scikit-learn, and MLOps principles.
+
+This project predicts customer credit scores using machine learning models and exposes predictions through a production-style REST API with interactive Swagger documentation.
 
 ---
 
 ## Features
 
-- Credit score prediction API
-- FastAPI backend
-- Swagger API documentation
-- ML inference pipeline
-- Docker-ready structure
-- Modular MLOps project architecture
-- Scorecard generation
+- Credit score prediction using Machine Learning
+- FastAPI-powered REST API
+- Interactive Swagger API documentation
+- Real-time inference pipeline
+- JSON request/response support
+- Docker-ready architecture
+- Modular MLOps project structure
+- Scorecard generation system
+
+---
+
+## Demo Video
+
+[Watch Project Demo](PASTE_YOUR_VIDEO_LINK_HERE)
+
+---
+
+## API Demo Screenshots
+
+### Swagger UI
+
+![Swagger UI](images/swagger-home.jpeg)
+
+---
+
+### Request Body Example
+
+![Request Body](images/request-body.jpeg)
+
+---
+
+### Prediction Result
+
+![Prediction Result](images/prediction-result.jpeg)
 
 ---
 
@@ -40,6 +69,7 @@ SmartCredit-Risk-Engine/
 ├── models/
 ├── notebooks/
 ├── reports/
+├── images/
 ├── Dockerfile
 ├── params.yaml
 ├── pyproject.toml
@@ -48,14 +78,12 @@ SmartCredit-Risk-Engine/
 
 ---
 
-## API Preview
+## API Endpoint
 
-### Swagger Documentation
+### Calculate Credit Score
 
-Visit:
-
-```bash
-http://127.0.0.1:8000/docs
+```http
+POST /calculate-credit-score
 ```
 
 ---
@@ -90,6 +118,45 @@ http://127.0.0.1:8000/docs
 
 ---
 
+## cURL Example
+
+```bash
+curl -X POST "http://127.0.0.1:8000/calculate-credit-score" \
+-H "accept: application/json" \
+-H "Content-Type: application/json" \
+-d '{
+  "person_age": 28,
+  "person_income": 65000,
+  "person_home_ownership": "RENT",
+  "person_emp_length": 5,
+  "loan_intent": "EDUCATION",
+  "loan_grade": "B",
+  "loan_amnt": 12000,
+  "loan_int_rate": 11.5,
+  "loan_percent_income": 0.18,
+  "cb_person_default_on_file": "N",
+  "cb_person_cred_hist_length": 6
+}'
+```
+
+---
+
+## System Architecture
+
+User / Client  
+↓  
+FastAPI Backend  
+↓  
+Input Validation  
+↓  
+ML Pipeline  
+↓  
+Credit Score Prediction  
+↓  
+JSON API Response
+
+---
+
 ## Installation
 
 Clone the repository:
@@ -112,6 +179,8 @@ python -m venv venv
 
 Activate virtual environment:
 
+### Windows
+
 ```bash
 venv\Scripts\activate
 ```
@@ -125,7 +194,13 @@ pip install -r requirements.txt
 Run FastAPI server:
 
 ```bash
-uvicorn api.api:app --reload
+python -m uvicorn api.api:app --reload
+```
+
+Open Swagger documentation:
+
+```bash
+http://127.0.0.1:8000/docs
 ```
 
 ---
