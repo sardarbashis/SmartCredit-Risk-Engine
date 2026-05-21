@@ -21,7 +21,7 @@ This project predicts customer credit scores using machine learning models and e
 
 ## Demo Video
 
-[Watch Project Demo](PASTE_YOUR_VIDEO_LINK_HERE)
+[Watch Project Demo](https://youtu.be/zLfexMf7kts)
 
 ---
 
